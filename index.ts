@@ -3,6 +3,7 @@ import multer from 'multer'
 import serveStatic from 'serve-static'
 import { S3 } from 'aws-sdk'
 import fs from 'fs'
+import nunjucks from 'nunjucks'
 
 const port = process.env['PORT'] || '3000'
 
@@ -25,7 +26,12 @@ const s3 = new S3({
 
 const app = express()
 
-app.use('/views', serveStatic('views/'))
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app
+});
+
+app.use('/static', serveStatic('static'))
 
 const imageUpload = multer({ dest: 'uploads/' }).single('imageUpload')
 
@@ -61,7 +67,7 @@ app.get('/healthcheck', (_req, res) => {
 })
 
 app.get('/', (_req, res) => {
-  res.send('Hello world')
+  res.render('index.njk')
 })
 
 app.listen(port, () => console.log(`Listening on ${port}`))
