@@ -1,5 +1,10 @@
 <!doctype html>
 
+<head>
+<link rel=stylesheet href="/static/memer.css">
+</head>
+
+<body>
 <div>
 
 <form method=post action="/upload" enctype="multipart/form-data">
@@ -9,4 +14,11 @@
 
 </div>
 
+{% for object in objects %}
+  <img class="meme-template" src="/images/{{ object }}">
+{% else %}
+  <p>No images yet</p>
+{% endfor %}
+
 <script src="/static/memer.js"></script>
+</body>

@@ -66,8 +66,17 @@ app.get('/healthcheck', (_req, res) => {
   res.send('OK')
 })
 
-app.get('/', (_req, res) => {
-  res.render('index.njk')
+app.get('/', async (_req, res, next) => {
+  try {
+    const objects = await s3.listObjects({Bucket: bucketName }).promise()
+    if(objects.Contents) {
+      res.render('index.njk', { objects: objects.Contents.map(x => x.Key) })
+    } else {
+      res.render('index.njk')
+    }
+  } catch(e) {
+    next(e)
+  }
 })
 
 app.listen(port, () => console.log(`Listening on ${port}`))
