@@ -10,6 +10,7 @@
     "clean": "rm -r build",
     "build": "npm run clean && tsc && cp package-lock.json package.json build",
     "push": "npm run build && cf v3-create-app memer && cf v3-apply-manifest -f manifest.yml && cf v3-zdt-push memer -p build",
+    "create-bucket": "cf create-service aws-s3-bucket default meme-bucket",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
