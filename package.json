@@ -1,0 +1,22 @@
+{
+  "name": "memer",
+  "private": true,
+  "version": "0.0.0",
+  "description": "A meme generator to demonstrate alphagov/paas-s3-broker",
+  "main": "index.ts",
+  "scripts": {
+    "start": "ts-node index.ts",
+    "build": "tsc index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Crown Copyright",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.16.1",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.4000"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
