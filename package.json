@@ -5,9 +5,15 @@
   "description": "A meme generator to demonstrate alphagov/paas-s3-broker",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node index.ts",
-    "build": "tsc index.ts",
+    "start:dev": "ts-node index.ts",
+    "start": "node index.js",
+    "clean": "rm -r build",
+    "build": "npm run clean && tsc && cp package-lock.json package.json build",
+    "push": "npm run build && cf v3-create-app memer && cf v3-apply-manifest -f manifest.yml && cf v3-zdt-push memer -p build",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "10.x"
   },
   "author": "Crown Copyright",
   "license": "MIT",

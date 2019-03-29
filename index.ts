@@ -1,9 +1,10 @@
 import express from 'express'
 import { S3 } from 'aws-sdk'
 
+const port = process.env['PORT'] || '3000'
 const app = express()
 
-app.get('/', async (_req, res, next) => {
+app.get('/list-buckets', async (_req, res, next) => {
   try {
     const s3 = new S3({apiVersion: '2006-03-01'})
     const buckets = await s3.listBuckets().promise()
@@ -17,4 +18,12 @@ app.get('/', async (_req, res, next) => {
   }
 })
 
-app.listen(3000, () => console.log('Listening on 3000'))
+app.get('/healthcheck', (_req, res) => {
+  res.send('OK')
+})
+
+app.get('/', (_req, res) => {
+  res.send('Hello world')
+})
+
+app.listen(port, () => console.log(`Listening on ${port}`))
