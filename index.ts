@@ -26,12 +26,17 @@ const s3 = new S3({
 
 const app = express()
 
-nunjucks.configure('views', {
+nunjucks.configure([
+    'views',
+    "node_modules/govuk-frontend/",
+    'node_modules/govuk-frontend/components/',
+  ], {
   autoescape: true,
   express: app
 });
 
 app.use('/static', serveStatic('static'))
+app.use('/assets', serveStatic('node_modules/govuk-frontend/assets'))
 
 const imageUpload = multer({ dest: 'uploads/' }).single('imageUpload')
 

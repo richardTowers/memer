@@ -1,0 +1,18 @@
+$govuk-font-family: arial, sans-serif;
+$govuk-include-default-font-face: false;
+
+@import "node_modules/govuk-frontend/all";
+
+.meme-template {
+  max-width: 500px;
+}
+
+.govuk-footer__copyright-logo {
+  background-image: none !important;
+  position: relative;
+}
+
+.govuk-footer__licence-logo {
+  position: absolute;
+  top: 0;
+}

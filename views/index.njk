@@ -1,33 +1,27 @@
-<!doctype html>
+{% extends "layout.njk" %}
 
-<head>
-<link rel=stylesheet href="/static/memer.css">
-</head>
+{% block content %}
+  <div>
+  <canvas id="meme-canvas" width="500px" height="333px"></canvas>
+  </div>
 
-<body>
+  <input class="meme-text">
+  <input class="meme-text">
+  <input class="meme-text">
 
-<div>
-<canvas id="meme-canvas" width="500px" height="333px"></canvas>
-</div>
+  <div>
 
-<input class="meme-text">
-<input class="meme-text">
-<input class="meme-text">
+  <form method=post action="/upload" enctype="multipart/form-data">
+    <input type=file name=imageUpload accept="image/png, image/jpeg" required>
+    <input type=submit>
+  </form>
 
-<div>
+  </div>
 
-<form method=post action="/upload" enctype="multipart/form-data">
-  <input type=file name=imageUpload accept="image/png, image/jpeg" required>
-  <input type=submit>
-</form>
+  {% for object in objects %}
+    <img class="meme-template" src="/images/{{ object }}">
+  {% else %}
+    <p>No images yet</p>
+  {% endfor %}
 
-</div>
-
-{% for object in objects %}
-  <img class="meme-template" src="/images/{{ object }}">
-{% else %}
-  <p>No images yet</p>
-{% endfor %}
-
-<script src="/static/memer.js"></script>
-</body>
+{% endblock %}
