@@ -1,16 +1,42 @@
 {% extends "layout.njk" %}
+{% from "file-upload/macro.njk" import govukFileUpload %}
+{% from "button/macro.njk" import govukButton %}
+
 
 {% block content %}
+<div class="govuk-width-container">
+  <main class="govuk-main-wrapper">
 
-  {% for object in objects %}
-    <img class="meme-template" src="/images/{{ object }}">
-  {% else %}
-    <p>No images yet</p>
-  {% endfor %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">Select an image</h1>
+        {% for object in objects %}
+          <a href="/caption-your-image/{{ object }}">
+          <img class="meme-template" src="/images/{{ object }}">
+          </a>
+        {% endfor %}
+      </div>
 
-  <form method=post action="/upload" enctype="multipart/form-data">
-    <input type=file name=imageUpload accept="image/png, image/jpeg" required>
-    <input type=submit>
-  </form>
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Upload a new image</h2>
+        <form method=post action="/upload" enctype="multipart/form-data">
+          {{ govukFileUpload({
+            id: "imageUpload",
+            name: "imageUpload",
+            label: {
+              text: "Upload an image"
+            },
+            attributes: {
+              accept: "image/png, image/jpeg",
+              required: "required"
+            }
+          }) }}
+          {{ govukButton({ text: "Upload", type: "submit" }) }}
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div>
 
 {% endblock %}

@@ -1,19 +1,25 @@
 {% extends "layout.njk" %}
+{% from "input/macro.njk" import govukInput %}
+{% from "button/macro.njk" import govukButton %}
 
 {% block content %}
 
-  <h1>Caption your image</h1>
+  <h1 class="govuk-heading-l">Caption your image</h1>
 
   <div>
   <canvas id="meme-canvas" width="500px" height="333px"></canvas>
   </div>
 
-  <input class="meme-text">
-  <input class="meme-text">
-  <input class="meme-text">
+  <form method=post action="/caption">
+    {{ govukInput({ label: { text: "Caption 1" }, id: "caption-1", name: "caption-1", classes: [ "meme-text" ] }) }}
+    {{ govukInput({ label: { text: "Caption 2" }, id: "caption-2", name: "caption-2", classes: [ "meme-text" ] }) }}
+    {{ govukInput({ label: { text: "Caption 3" }, id: "caption-3", name: "caption-3", classes: [ "meme-text" ] }) }}
+    {{ govukButton({ text: "Submit", type: "submit" }) }}
+  </form>
 
   <div>
 
+  <img src="/images/{{ object }}" style="display: none">
 
   </div>
 

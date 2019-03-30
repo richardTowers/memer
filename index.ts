@@ -71,6 +71,23 @@ app.get('/', async (_req, res, next) => {
   }
 })
 
+app.get('/select-your-image', async (_req, res, next) => {
+  try {
+    const objects = await s3.listObjects({Bucket: bucketName }).promise()
+    if(objects.Contents) {
+      res.render('select-your-image.njk', { objects: objects.Contents.map(x => x.Key) })
+    } else {
+      res.render('select-your-image.njk')
+    }
+  } catch(e) {
+    next(e)
+  }
+})
+
+app.get('/caption-your-image/:object', (req, res) => {
+  res.render('caption-your-image.njk', { object: req.params.object })
+})
+
 app.get('/gallery/:currentObject', async (req, res, next) => {
   try {
     const objects = await s3.listObjects({Bucket: bucketName }).promise()
