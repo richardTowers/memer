@@ -54,19 +54,6 @@ app.get('/images/:key', (req, res) => {
   s3.getObject({Bucket: bucketName, Key: req.params.key}).createReadStream().pipe(res)
 })
 
-app.get('/list-objects', async (_req, res, next) => {
-  try {
-    const objects = await s3.listObjects({Bucket: bucketName }).promise()
-    if(objects.Contents) {
-      res.send('Objects: ' + JSON.stringify(objects.Contents.map(x => x.Key)))
-    } else {
-      res.send('No objects :(')
-    }
-  } catch(e) {
-    next(e)
-  }
-})
-
 app.get('/healthcheck', (_req, res) => {
   res.send('OK')
 })
@@ -75,9 +62,22 @@ app.get('/', async (_req, res, next) => {
   try {
     const objects = await s3.listObjects({Bucket: bucketName }).promise()
     if(objects.Contents) {
-      res.render('index.njk', { objects: objects.Contents.map(x => x.Key) })
+      res.render('gallery.njk', { objects: objects.Contents.map(x => x.Key) })
     } else {
-      res.render('index.njk')
+      res.render('gallery.njk')
+    }
+  } catch(e) {
+    next(e)
+  }
+})
+
+app.get('/gallery/:currentObject', async (req, res, next) => {
+  try {
+    const objects = await s3.listObjects({Bucket: bucketName }).promise()
+    if(objects.Contents) {
+      res.render('gallery.njk', { currentObject: req.params.currentObject, objects: objects.Contents.map(x => x.Key) })
+    } else {
+      res.render('gallery.njk')
     }
   } catch(e) {
     next(e)

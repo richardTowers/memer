@@ -1,0 +1,16 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+
+  {% for object in objects %}
+    <img class="meme-template" src="/images/{{ object }}">
+  {% else %}
+    <p>No images yet</p>
+  {% endfor %}
+
+  <form method=post action="/upload" enctype="multipart/form-data">
+    <input type=file name=imageUpload accept="image/png, image/jpeg" required>
+    <input type=submit>
+  </form>
+
+{% endblock %}

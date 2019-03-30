@@ -1,0 +1,16 @@
+{% extends "layout.njk" %}
+
+{% set mainClasses = "govuk-main-wrapper--l" %}
+
+{% from "panel/macro.njk" import govukPanel %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukPanel({
+        titleText: "Meme submitted",
+        html: "You can view your meme in the gallery"
+      }) }}
+    </div>
+  </div>
+{% endblock %}

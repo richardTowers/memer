@@ -1,0 +1,29 @@
+{% extends "layout.njk" %}
+
+{% block content %}
+<div class="govuk-width-container">
+  <main class="govuk-main-wrapper">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">TODO: Caption here</h1>
+        {% if currentObject %}
+          <img class="meme-template" src="/images/{{ currentObject }}">
+        {% else %}
+          <img class="meme-template" src="/images/{{ objects[0] }}">
+        {% endif %}
+      </div>
+
+      <div class="govuk-grid-column-one-third">
+        <h2 class="govuk-heading-m">Memes</h2>
+        <ul>
+          {% for object in objects %}
+            <li><a href="/gallery/{{ object }}">{{object}}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+{% endblock %}
