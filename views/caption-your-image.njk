@@ -20,7 +20,7 @@
       <form method=post action="/caption">
         {{ govukInput({ label: { text: "Title" }, id: "title", name: "title", classes: [ "meme-text" ] }) }}
         <div id="captions-container"></div>
-        {{ govukButton({ text: "Submit", type: "submit" }) }}
+        {{ govukButton({ text: "Submit", type: "submit", attributes: { id: "meme-submit" } }) }}
       </form>
     </div>
 

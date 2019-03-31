@@ -41,6 +41,15 @@
         captions: settings.captions.map(x => Object.assign(x))
     }
    
+    function renderMemeText(canvas, context) {
+        for (const caption of state.captions) {
+            if (caption.value){
+                context.strokeText(caption.value, caption.x, caption.y, caption.dx)
+                context.fillText(caption.value, caption.x, caption.y, caption.dx)
+            }
+        }
+    }
+
     img.onload = function () {
         // Lock the image's dimensions so it won't resize
         img.style.width = img.width + 'px'
@@ -65,16 +74,28 @@
                 }
             }
             
-            // TODO handle title
-
             context.clearRect(0, 0, canvas.width, canvas.height)
-            for (const caption of state.captions) {
-                if (caption.value){
-                    context.strokeText(caption.value, caption.x, caption.y, caption.dx)
-                    context.fillText(caption.value, caption.x, caption.y, caption.dx)
-                }
-            }
+            renderMemeText(canvas, context)
         }
+
+        document.forms[0].onsubmit = function () {
+            const newCanvas = document.createElement('canvas')
+            newCanvas.width = img.width
+            newCanvas.height = img.height
+            const newContext = newCanvas.getContext('2d')
+            newContext.font = '30px monospace'
+            newContext.fillStyle = 'white'
+            newContext.strokeStyle = 'black'
+            newContext.lineWidth = 2
+            newContext.drawImage(img, 0, 0, img.width, img.height)
+            renderMemeText(newCanvas, newContext)
+
+            const input = document.createElement('input')
+            input.type = 'hidden'
+            input.value = newCanvas.toDataURL()
+            document.forms[0].appendChild(input)
+        }
+
     }
 
 })()
