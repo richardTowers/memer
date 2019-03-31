@@ -66,7 +66,7 @@ app.use('/assets', serveStatic('node_modules/govuk-frontend/assets'))
 passport.use(new passportGoogleOauth.Strategy({
   clientID: googleClientId,
   clientSecret: googleClientSecret,
-  callbackURL: '/auth/google/callback'
+  callbackURL: process.env['CALLBACK_URL'] || '/auth/google/callback'
 }, (_accessToken: string, _refreshToken: string, profile: any, done: any) => {
   done(null, profile)
 }))
