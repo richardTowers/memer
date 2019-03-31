@@ -10,5 +10,4 @@ TODO
 * Allow people to create image templates
 * Store image location, number and location of text in a database
 * Use layered canvases to and combine them into one as per https://stackoverflow.com/a/38856007/1344760
-* Authentication with google
 * Refactoring

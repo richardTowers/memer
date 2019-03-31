@@ -64,24 +64,28 @@ app.use('/assets', serveStatic('node_modules/govuk-frontend/assets'))
 passport.use(new passportGoogleOauth.Strategy({
   clientID: googleClientId,
   clientSecret: googleClientSecret,
-  callbackURL: `/auth/google/callback`
+  callbackURL: '/auth/google/callback'
 }, (_accessToken: string, _refreshToken: string, profile: any, done: any) => {
   done(null, profile)
 }))
 
 app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login', 'email'] }))
 
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/something-went-wrong' }), (req, res) => {
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/something-went-wrong' }), (_req, res) => {
   res.redirect('/select-your-image')
 })
 
 const imageUpload = multer({ dest: 'uploads/' }).single('imageUpload')
 
+app.get('/login', (_req, res) => {
+  res.render('login.njk')
+})
+
 app.post('/upload', imageUpload, async (req, res, next) => {
   try {
     const file = fs.readFileSync(__dirname + '/' + req.file.path)
     await s3Storage.writeFile(`${req.file.filename}-${req.file.originalname}`, file)
-    res.redirect('/')
+    res.redirect('/login')
   } catch(e) {
     next(e)
   }
@@ -106,6 +110,7 @@ app.get('/', async (req, res, next) => {
 
 app.get('/select-your-image', async (req, res, next) => {
   try {
+    if (!req.user) { return res.redirect('/login') }
     const keys = await s3Storage.list()
     res.render('select-your-image.njk', { objects: keys, authenticatedUser: req.user })
   } catch(e) {
@@ -114,6 +119,7 @@ app.get('/select-your-image', async (req, res, next) => {
 })
 
 app.get('/caption-your-image/:object', (req, res) => {
+  if (!req.user) { return res.redirect('/login') }
   res.render('caption-your-image.njk', { object: req.params.object, authenticatedUser: req.user })
 })
 
