@@ -69,7 +69,11 @@ passport.use(new passportGoogleOauth.Strategy({
   done(null, profile)
 }))
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login', 'email'] }))
+app.get('/auth/google', passport.authenticate('google', {
+    hd: 'digital.cabinet-office.gov.uk',
+    scope: ['https://www.googleapis.com/auth/plus.login', 'email']
+  } as any)
+)
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/something-went-wrong' }), (_req, res) => {
   res.redirect('/select-your-image')
