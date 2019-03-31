@@ -9,6 +9,7 @@ import passport from 'passport'
 //@ts-ignore
 import passportGoogleOauth from 'passport-google-oauth20'
 import expressSession from 'express-session'
+import bodyParser from 'body-parser'
 
 const port = process.env['PORT'] || '3000'
 
@@ -58,6 +59,7 @@ app.use(expressSession({ secret: sessionSecret, resave: true, saveUninitialized:
 app.use(passport.initialize())
 app.use(passport.session())
 
+app.use(bodyParser.urlencoded({extended: false, limit: '10mb'}))
 app.use('/static', serveStatic('static'))
 app.use('/assets', serveStatic('node_modules/govuk-frontend/assets'))
 
@@ -87,9 +89,10 @@ app.get('/login', (_req, res) => {
 
 app.post('/upload', imageUpload, async (req, res, next) => {
   try {
+    if (!req.user) { return res.redirect('/login') }
     const file = fs.readFileSync(__dirname + '/' + req.file.path)
-    await s3Storage.writeFile(`${req.file.filename}-${req.file.originalname}`, file)
-    res.redirect('/login')
+    await s3Storage.writeFile(`templates:${req.file.filename}-${req.file.originalname}`, file)
+    res.redirect('/select-your-image')
   } catch(e) {
     next(e)
   }
@@ -105,7 +108,7 @@ app.get('/healthcheck', (_req, res) => {
 
 app.get('/', async (req, res, next) => {
   try {
-    const keys = await s3Storage.list()
+    const keys = await s3Storage.list('memes:')
     res.render('gallery.njk', { objects: keys, authenticatedUser: req.user })
   } catch(e) {
     next(e)
@@ -115,7 +118,7 @@ app.get('/', async (req, res, next) => {
 app.get('/select-your-image', async (req, res, next) => {
   try {
     if (!req.user) { return res.redirect('/login') }
-    const keys = await s3Storage.list()
+    const keys = await s3Storage.list('templates:')
     res.render('select-your-image.njk', { objects: keys, authenticatedUser: req.user })
   } catch(e) {
     next(e)
@@ -129,11 +132,19 @@ app.get('/caption-your-image/:object', (req, res) => {
 
 app.get('/gallery/:currentObject', async (req, res, next) => {
   try {
-    const keys = await s3Storage.list()
+    const keys = await s3Storage.list('memes:')
     res.render('gallery.njk', { currentObject: req.params.currentObject, objects: keys, authenticatedUser: req.user })
   } catch(e) {
     next(e)
   }
+})
+
+app.post('/caption', async (req, res) => {
+  if (!req.user) { return res.redirect('/login') }
+  const base64Meme = req.body['meme-data-url'].split(',')[1]
+  const img = Buffer.from(base64Meme, 'base64')
+  await s3Storage.writeFile('memes:' + new Date(), img)
+  res.redirect('/')
 })
 
 app.listen(port, () => console.log(`Listening on ${port}`))

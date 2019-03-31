@@ -25,8 +25,8 @@ export default class S3Storage implements IStorage {
     this.bucket = credentials.bucket_name
   }
 
-  async list(): Promise<string[]> {
-    return await this.s3.listObjects({Bucket: this.bucket })
+  async list(directory: string): Promise<string[]> {
+    return await this.s3.listObjects({Bucket: this.bucket, Prefix: directory})
       .promise()
       .then(x => (x.Contents || []).map(y => y.Key || ''))
   }

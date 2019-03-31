@@ -93,6 +93,7 @@
             const input = document.createElement('input')
             input.type = 'hidden'
             input.value = newCanvas.toDataURL()
+            input.name = 'meme-data-url'
             document.forms[0].appendChild(input)
         }
 

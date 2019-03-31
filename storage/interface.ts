@@ -2,7 +2,7 @@ import * as stream from 'stream';
 import { S3 } from 'aws-sdk'
 
 export default interface IStorage {
-  list(): Promise<string[]>
+  list(directory: string): Promise<string[]>
 
   readFile(key: string): stream.Readable
 
