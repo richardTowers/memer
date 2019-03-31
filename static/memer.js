@@ -1,6 +1,18 @@
 (function () {
     'use strict'
 
+    // TODO: don't hardcode these
+    const settingsByImage = {
+        'templates:b53c9f1baa6c7c2543c39a72db2896fc-The-Scroll-Of-Truth.jpg': {
+            captions: [
+                { x: 20, y: 62, fill: '#000', stroke: null },
+                { x: 20, y: 67, fill: '#000', stroke: null },
+                { x: 20, y: 72, fill: '#000', stroke: null },
+                { x: 20, y: 77, fill: '#000', stroke: null },
+            ]
+        }
+    }
+
     const container = document.querySelector('#canvas-container')
     const img = document.querySelector('.meme-image')
     if (!container || !img) { return }
@@ -9,14 +21,8 @@
     canvas.style.position = 'absolute'
     canvas.style.top = 0
 
-
-    const settings = {
-        captions: [
-            {x: 80, y: 250, dx: 100},
-            {x: 250, y: 150, dx: 100},
-            {x: 400, y: 200, dx: 100},
-        ]
-    }
+    // TODO: do this in a less fragile, hacky way
+    const settings = settingsByImage[location.pathname.split('/')[2]]
 
     const captionsContainer = document.querySelector('#captions-container')
     for (let i = 0; i < settings.captions.length; i++) {
@@ -42,10 +48,21 @@
     }
    
     function renderMemeText(canvas, context) {
+        context.font = '16px monospace'
+        context.lineWidth = 2
+
         for (const caption of state.captions) {
             if (caption.value){
-                context.strokeText(caption.value, caption.x, caption.y, caption.dx)
-                context.fillText(caption.value, caption.x, caption.y, caption.dx)
+                context.fillStyle = caption.fill
+                context.strokeStyle = caption.stroke
+                const x = canvas.width * caption.x / 100
+                const y = canvas.height * caption.y / 100
+                if (caption.stroke) {
+                    context.strokeText(caption.value, x, y)
+                }
+                if (caption.fill) {
+                    context.fillText(caption.value, x, y)
+                }
             }
         }
     }
@@ -60,10 +77,6 @@
         container.appendChild(canvas)
 
         const context = canvas.getContext('2d')
-        context.font = '30px monospace'
-        context.fillStyle = 'white'
-        context.strokeStyle = 'black'
-        context.lineWidth = 2
 
         document.onkeyup = function (ev) {
             if (/meme-text/.test(ev.target.className)) {
@@ -83,10 +96,6 @@
             newCanvas.width = img.width
             newCanvas.height = img.height
             const newContext = newCanvas.getContext('2d')
-            newContext.font = '30px monospace'
-            newContext.fillStyle = 'white'
-            newContext.strokeStyle = 'black'
-            newContext.lineWidth = 2
             newContext.drawImage(img, 0, 0, img.width, img.height)
             renderMemeText(newCanvas, newContext)
 

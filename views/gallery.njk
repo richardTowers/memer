@@ -8,7 +8,7 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">TODO: Caption here</h1>
+        <h1 class="govuk-heading-l">{{ objects[0].split(':')[1] }}</h1>
         {% if currentObject %}
           <img class="meme-template" src="/images/{{ currentObject }}">
         {% else %}

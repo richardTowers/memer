@@ -106,15 +106,6 @@ app.get('/healthcheck', (_req, res) => {
   res.send('OK')
 })
 
-app.get('/', async (req, res, next) => {
-  try {
-    const keys = await s3Storage.list('memes:')
-    res.render('gallery.njk', { objects: keys, authenticatedUser: req.user })
-  } catch(e) {
-    next(e)
-  }
-})
-
 app.get('/select-your-image', async (req, res, next) => {
   try {
     if (!req.user) { return res.redirect('/login') }
@@ -130,6 +121,15 @@ app.get('/caption-your-image/:object', (req, res) => {
   res.render('caption-your-image.njk', { object: req.params.object, authenticatedUser: req.user })
 })
 
+app.get('/', async (req, res, next) => {
+  try {
+    const keys = await s3Storage.list('memes:')
+    res.render('gallery.njk', { objects: keys, authenticatedUser: req.user })
+  } catch(e) {
+    next(e)
+  }
+})
+
 app.get('/gallery/:currentObject', async (req, res, next) => {
   try {
     const keys = await s3Storage.list('memes:')
@@ -143,7 +143,7 @@ app.post('/caption', async (req, res) => {
   if (!req.user) { return res.redirect('/login') }
   const base64Meme = req.body['meme-data-url'].split(',')[1]
   const img = Buffer.from(base64Meme, 'base64')
-  await s3Storage.writeFile('memes:' + new Date(), img)
+  await s3Storage.writeFile('memes:' + req.body.title, img)
   res.redirect('/')
 })
 
