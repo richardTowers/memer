@@ -10,6 +10,13 @@
                 { x: 20, y: 72, fill: '#000', stroke: null },
                 { x: 20, y: 77, fill: '#000', stroke: null },
             ]
+        },
+        'templates:40bec809fc23760ce6ece3e322dde56a-pigeon.jpg': {
+            captions: [
+                { x: 23, y: 40, fill: '#fff', stroke: '#000' },
+                { x: 28, y: 95, fill: '#fff', stroke: '#000' },
+                { x: 70, y: 20, fill: '#fff', stroke: '#000' },
+            ]
         }
     }
 
