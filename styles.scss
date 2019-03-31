@@ -4,7 +4,7 @@ $govuk-include-default-font-face: false;
 @import "node_modules/govuk-frontend/all";
 
 .meme-template {
-  max-width: 500px;
+  max-width: 100%;
 }
 
 .govuk-footer__copyright-logo {
