@@ -25,3 +25,7 @@ $govuk-include-default-font-face: false;
   height: 10px;
   background: linear-gradient(to right, rgb(43, 120, 240), rgb(84, 255, 97), rgb(217, 196, 10), rgb(250, 112, 50), rgb(214, 0, 186), rgb(163, 0, 233));
 }
+
+.authenticated-user {
+  float: right;
+}
