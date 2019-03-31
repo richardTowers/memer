@@ -8,11 +8,11 @@
 
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">{{ objects[0].split(':')[1] }}</h1>
-        {% if currentObject %}
-          <img class="meme-template" src="/images/{{ currentObject }}">
-        {% else %}
+        {% if objects[0] %}
+          <h1 class="govuk-heading-l">{{ objects[0].split(':')[1] }}</h1>
           <img class="meme-template" src="/images/{{ objects[0] }}">
+        {% else %}
+          <p class="govuk-body">Nobody has posted anything yet...</p>
         {% endif %}
       </div>
 
