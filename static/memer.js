@@ -1,44 +1,80 @@
-'use strict'
+(function () {
+    'use strict'
 
-const canvas= document.getElementById('meme-canvas')
-const context = canvas.getContext('2d')
-context.font = '30px monospace'
-context.fillStyle = 'white'
-context.strokeStyle = 'black'
-context.lineWidth = 2
-let state
+    const container = document.querySelector('#canvas-container')
+    const img = document.querySelector('.meme-image')
+    if (!container || !img) { return }
 
-function renderImage () {
-    context.drawImage(this, 0, 0, 500, 333)
-    state = context.getImageData(0, 0, 500, 333)
-}
+    let canvas = document.createElement('canvas')
+    canvas.style.position = 'absolute'
+    canvas.style.top = 0
 
-window.onload = function () {
-    const firstImage = document.querySelector('img')
-    if (firstImage) {
-     renderImage.call(firstImage)   
+
+    const settings = {
+        captions: [
+            {x: 80, y: 250, dx: 100},
+            {x: 250, y: 150, dx: 100},
+            {x: 400, y: 200, dx: 100},
+        ]
     }
-}
 
-for (const img of document.querySelectorAll('img.meme-template')) {
-    img.onclick = renderImage
-}
-
-const textBoxes = Array.from(document.querySelectorAll('.meme-text'))
-
-const positions = [
-    [80, 250],
-    [250, 150],
-    [400, 200],
-]
-
-for (let i = 0; i < textBoxes.length; i++) {
-    textBoxes[i].onkeyup = function () {
-        context.putImageData(state, 0, 0)
-        context.strokeText(this.value, positions[i][0], positions[i][1])
-        context.fillText(this.value, positions[i][0], positions[i][1])
+    const captionsContainer = document.querySelector('#captions-container')
+    for (let i = 0; i < settings.captions.length; i++) {
+        const id = 'caption-' + i
+        const formGroup = document.createElement('div')
+        formGroup.className = 'govuk-form-group'
+        const label = document.createElement('label')
+        label.htmlFor = id
+        label.appendChild(document.createTextNode('Caption ' + i))
+        label.className = 'govuk-label'
+        const input = document.createElement('input')
+        input.id = id
+        input.name = id
+        input.className = 'govuk-input meme-text'
+        formGroup.appendChild(label)
+        formGroup.appendChild(input)
+        captionsContainer.appendChild(formGroup)
     }
-    textBoxes[i].onblur = function () {
-        state = context.getImageData(0, 0, 500, 333)
+
+    const state = {
+        title: '',
+        captions: settings.captions.map(x => Object.assign(x))
     }
-}
+   
+    img.onload = function () {
+        // Lock the image's dimensions so it won't resize
+        img.style.width = img.width + 'px'
+        img.style.height = img.height + 'px'
+
+        canvas.width = img.width
+        canvas.height = img.height
+        container.appendChild(canvas)
+
+        const context = canvas.getContext('2d')
+        context.font = '30px monospace'
+        context.fillStyle = 'white'
+        context.strokeStyle = 'black'
+        context.lineWidth = 2
+
+        document.onkeyup = function (ev) {
+            if (/meme-text/.test(ev.target.className)) {
+                const match = /caption-(\d+)/.exec(ev.target.id)
+                if (match) {
+                    const index = +match[1]
+                    state.captions[index].value = ev.target.value
+                }
+            }
+            
+            // TODO handle title
+
+            context.clearRect(0, 0, canvas.width, canvas.height)
+            for (const caption of state.captions) {
+                if (caption.value){
+                    context.strokeText(caption.value, caption.x, caption.y, caption.dx)
+                    context.fillText(caption.value, caption.x, caption.y, caption.dx)
+                }
+            }
+        }
+    }
+
+})()

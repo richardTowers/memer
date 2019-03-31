@@ -29,3 +29,11 @@ $govuk-include-default-font-face: false;
 .authenticated-user {
   float: right;
 }
+
+.meme-image {
+  width: 100%;
+}
+
+#canvas-container {
+  position: relative;
+}
