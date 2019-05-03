@@ -29,7 +29,19 @@
     canvas.style.top = 0
 
     // TODO: do this in a less fragile, hacky way
-    const settings = settingsByImage[location.pathname.split('/')[2]]
+    const settings = settingsByImage[location.pathname.split('/')[2]] || {
+        captions: [
+                { x: 10, y: 10, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 20, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 30, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 40, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 50, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 60, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 70, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 80, fill: '#fff', stroke: '#000', stroke: null },
+                { x: 10, y: 90, fill: '#fff', stroke: '#000', stroke: null },
+        ]
+    }
 
     const captionsContainer = document.querySelector('#captions-container')
     for (let i = 0; i < settings.captions.length; i++) {
